@@ -1,0 +1,27 @@
+---
+import Logo from './Logo.astro';
+import BotonTema from './BotonTema.astro';
+import Icono from './Icono.astro';
+import { menu } from '../data/empresa.js';
+
+const actual = Astro.url.pathname.replace(/\/$/, '') || '/';
+const activo = (ruta: string) => (ruta === '/' ? actual === '/' : actual.startsWith(ruta));
+---
+<header id="cabecera">
+  <div class="contenedor">
+    <a href="/" aria-label="ICON Ltda, ir al inicio"><Logo /></a>
+    <div class="cabecera-der">
+      <nav id="menu" aria-label="Menú principal">
+        <ul>
+          {menu.map((m) => (
+            <li><a href={m.ruta} class={activo(m.ruta) ? 'activo' : ''} aria-current={activo(m.ruta) ? 'page' : undefined}>{m.texto}</a></li>
+          ))}
+        </ul>
+      </nav>
+      <BotonTema />
+      <button class="hamburguesa" id="hamburguesa" type="button" aria-label="Abrir menú" aria-expanded="false" aria-controls="menu">
+        <Icono nombre="menu-2" />
+      </button>
+    </div>
+  </div>
+</header>

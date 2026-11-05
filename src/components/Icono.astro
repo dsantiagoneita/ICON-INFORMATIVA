@@ -1,0 +1,28 @@
+---
+// Ícono de la colección Tabler, insertado como SVG en la página (sin descargar fuentes de íconos).
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
+
+interface Props { nombre: string; class?: string; tam?: number | string }
+const { nombre, class: clase = '', tam = '1em' } = Astro.props;
+
+// Íconos propios (no existen en Tabler), dibujados con el mismo estilo de línea
+const propios: Record<string, string> = {
+  'casco-obra':
+    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15a8 8 0 0 1 16 0" /><path d="M10 15v-6.6a2 2 0 0 1 4 0v6.6" /><rect x="2" y="15" width="20" height="3" rx="1" /></svg>',
+};
+
+const cache = (globalThis.__iconos ??= new Map());
+let svg = propios[nombre] ?? cache.get(nombre);
+if (!svg) {
+  const ruta = join(process.cwd(), 'node_modules', '@tabler', 'icons', 'icons', 'outline', `${nombre}.svg`);
+  svg = readFileSync(ruta, 'utf8')
+    .replace(/<path stroke="none" d="M0 0h24v24H0z" fill="none"\s*\/>/, '')
+    .replace(/\s(width|height|class)="[^"]*"/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+  cache.set(nombre, svg);
+}
+const html = svg.replace('<svg', `<svg class="ti ${clase}" width="${tam}" height="${tam}" aria-hidden="true" focusable="false"`);
+---
+<Fragment set:html={html} />

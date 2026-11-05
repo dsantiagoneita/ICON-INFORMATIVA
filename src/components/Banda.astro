@@ -1,0 +1,15 @@
+---
+// Encabezado oscuro de las páginas internas, con ruta de navegación.
+import Icono from './Icono.astro';
+interface Props { titulo: string; etiqueta?: string; resumen?: string; miga?: string }
+const { titulo, etiqueta = 'ICON Ltda', resumen, miga = titulo } = Astro.props;
+---
+<div class="banda">
+  <div class="contenedor">
+    <nav class="miga sube" style="animation-delay:.1s" aria-label="Ruta"><a href="/">Inicio</a><Icono nombre="chevron-right" />{miga}</nav>
+    <span class="etiqueta sube" style="animation-delay:.2s">{etiqueta}</span>
+    <h1 class="sube" style="animation-delay:.3s">{titulo}</h1>
+    {resumen && <p class="sube" style="animation-delay:.45s">{resumen}</p>}
+    <slot />
+  </div>
+</div>

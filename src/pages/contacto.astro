@@ -1,0 +1,128 @@
+---
+import Base from '../layouts/Base.astro';
+import Banda from '../components/Banda.astro';
+import Icono from '../components/Icono.astro';
+import { empresa, enlaceWhatsApp } from '../data/empresa.js';
+
+const telefono = empresa.telefonoEnlace ? `tel:${empresa.telefonoEnlace}` : '#';
+const mapa = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(empresa.direccion + ', Boyacá, Colombia')}`;
+
+const preguntas = [
+  { p: '¿En qué municipios trabajan?', r: 'En los 13 municipios de la provincia de Sugamuxi: Sogamoso, Aquitania, Cuítiva, Firavitoba, Gámeza, Iza, Mongua, Monguí, Nobsa, Pesca, Tibasosa, Tópaga y Tota.' },
+  { p: '¿Cómo pido una cotización?', r: 'Escríbanos por WhatsApp contándonos qué necesita y en qué municipio. Si hace falta, programamos una visita técnica.' },
+  { p: '¿Hacen los trámites ante la EBSA?', r: 'Sí. Como contratistas de la EBSA conocemos sus normas y acompañamos el proceso de aprobación de cada obra.' },
+  { p: '¿Atienden daños en la red?', r: 'Sí, hacemos mantenimiento correctivo: cambio de postes, reparación de cable y reposición de elementos dañados.' },
+];
+---
+<Base
+  titulo="Contacto · Redes eléctricas en Duitama y Sugamuxi"
+  descripcion="Contacte a ICON Ltda, Calle 11 # 17-46, Duitama, Boyacá, por WhatsApp, teléfono o correo. Redes eléctricas de baja y media tensión en Sugamuxi."
+>
+  <Banda titulo="Hablemos de su proyecto" etiqueta="Contacto" miga="Contacto" resumen="Escríbanos, llámenos o envíenos un correo. Nuestra oficina está en Duitama y trabajamos en toda la zona Sugamuxi.">
+    <div class="estado-horario sube" style="animation-delay:.6s" id="estado-horario" data-horario={JSON.stringify(empresa.horario)}>
+      <span class="punto-estado"></span><span class="texto-estado">Consultando horario…</span>
+    </div>
+  </Banda>
+
+  <!-- Tres formas de contacto -->
+  <section class="contacto-vias">
+    <div class="contenedor vias">
+      <a class="via-contacto wa rev" href={enlaceWhatsApp()} target="_blank" rel="noopener">
+        <span class="via-ico"><Icono nombre="brand-whatsapp" /></span>
+        <span class="via-nombre">WhatsApp</span>
+        <span class="via-dato">{empresa.telefono} · la forma más rápida</span>
+        <span class="via-ir">Escribir <Icono nombre="arrow-right" /></span>
+      </a>
+      <a class="via-contacto tel rev d1" href={telefono}>
+        <span class="via-ico"><Icono nombre="phone" /></span>
+        <span class="via-nombre">Teléfono</span>
+        <span class="via-dato">{empresa.telefono}</span>
+        <span class="via-ir">Llamar <Icono nombre="arrow-right" /></span>
+      </a>
+      <a class="via-contacto correo rev d2" href={`mailto:${empresa.correo}`}>
+        <span class="via-ico"><Icono nombre="mail" /></span>
+        <span class="via-nombre">Correo</span>
+        <span class="via-dato">{empresa.correo}</span>
+        <span class="via-ir">Enviar <Icono nombre="arrow-right" /></span>
+      </a>
+    </div>
+  </section>
+
+  <!-- Ubicación y horario -->
+  <section class="ubicacion" style="background:var(--fondo-2)">
+    <div class="contenedor ubic-rejilla">
+      <div class="rev">
+        <span class="etiqueta">Dónde estamos</span>
+        <h2 class="titulo-seccion">Duitama, Boyacá</h2>
+        <div class="raya"></div>
+        <p class="ubic-dir"><Icono nombre="map-pin" /> {empresa.direccion}</p>
+        <h3 class="ubic-h">Horario de atención</h3>
+        <ul class="horario">
+          {empresa.horario.map((h) => <li><span>{h.texto}</span><b>{h.horas}</b></li>)}
+          <li><span>Domingos y festivos</span><b>Cerrado</b></li>
+        </ul>
+        <a class="boton boton-borde" href={mapa} target="_blank" rel="noopener"><Icono nombre="map-2" /> Abrir en Google Maps</a>
+      </div>
+      <div class="plano rev d2" aria-hidden="true">
+        <svg viewBox="0 0 520 380">
+          <rect width="520" height="380" class="plano-fondo" />
+          <g class="calles">
+            <path d="M0 90 H520 M0 200 H520 M0 300 H520 M90 0 V380 M220 0 V380 M350 0 V380 M460 0 V380" />
+            <path class="avenida" d="M0 360 L520 40" />
+          </g>
+          <g class="manzanas">
+            <rect x="105" y="105" width="100" height="80" rx="8" /><rect x="235" y="215" width="100" height="70" rx="8" />
+            <rect x="365" y="105" width="80" height="80" rx="8" /><rect x="105" y="215" width="100" height="70" rx="8" />
+            <rect x="10" y="10" width="65" height="65" rx="8" /><rect x="365" y="215" width="80" height="70" rx="8" />
+          </g>
+          <circle class="onda" cx="285" cy="150" r="14" />
+          <circle class="onda o2" cx="285" cy="150" r="14" />
+          <g class="pin"><path d="M285 150 C268 128 262 118 262 106 a23 23 0 0 1 46 0 c0 12 -6 22 -23 44Z" /><circle cx="285" cy="106" r="8" /></g>
+          <text x="285" y="182" text-anchor="middle" class="plano-txt">ICON Ltda</text>
+        </svg>
+        <span class="nota">Ubicación ilustrativa</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Preguntas frecuentes (todas visibles, sin clics) -->
+  <section>
+    <div class="contenedor">
+      <div class="rev"><span class="etiqueta">Preguntas frecuentes</span><h2 class="titulo-seccion">Lo que más nos preguntan</h2></div>
+      <div class="faq">
+        {preguntas.map((q, i) => (
+          <div class={`faq-item rev ${i % 2 ? 'd1' : ''}`}>
+            <span class="faq-n">{String(i + 1).padStart(2, '0')}</span>
+            <h3>{q.p}</h3>
+            <p>{q.r}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <div class="llamado">
+    <div class="contenedor">
+      <h2>¿Listo para empezar su proyecto?</h2>
+      <span class="iman"><a href={enlaceWhatsApp('Hola ICON, quisiera una cotización.')} target="_blank" rel="noopener" class="boton boton-oscuro"><Icono nombre="brand-whatsapp" /> Escríbanos</a></span>
+    </div>
+  </div>
+</Base>
+
+<script>
+  // Indica solo si ICON está abierto ahora (hora de Colombia)
+  const caja = document.getElementById('estado-horario');
+  if (caja) {
+    type Franja = { texto: string; horas: string; dias: number[]; desde: string; hasta: string };
+    const horario: Franja[] = JSON.parse(caja.dataset.horario || '[]');
+    const partes = new Intl.DateTimeFormat('en-US', { timeZone: 'America/Bogota', weekday: 'short', hour: '2-digit', minute: '2-digit', hour12: false }).formatToParts(new Date());
+    const dia = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].indexOf(partes.find((p) => p.type === 'weekday')!.value);
+    const ahora = `${partes.find((p) => p.type === 'hour')!.value.replace('24', '00')}:${partes.find((p) => p.type === 'minute')!.value}`;
+    const hoy = horario.find((h) => h.dias.includes(dia));
+    const abierto = !!hoy && ahora >= hoy.desde && ahora < hoy.hasta;
+    caja.classList.add(abierto ? 'abierto' : 'cerrado');
+    caja.querySelector('.texto-estado')!.textContent = abierto
+      ? `Abierto ahora · hoy hasta las ${hoy!.horas.split('–')[1].trim()}`
+      : 'Cerrado ahora · escríbanos por WhatsApp y le respondemos';
+  }
+</script>

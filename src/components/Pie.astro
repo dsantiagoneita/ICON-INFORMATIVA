@@ -1,0 +1,38 @@
+---
+import Logo from './Logo.astro';
+import Icono from './Icono.astro';
+import { empresa, menu, enlaceWhatsApp } from '../data/empresa.js';
+import { servicios } from '../data/servicios.js';
+---
+<footer class="pie">
+  <div class="contenedor pie-rejilla">
+    <div>
+      <Logo />
+      <p class="pie-texto">Construcción y mantenimiento de redes eléctricas de baja y media tensión en la zona Sugamuxi, Boyacá.</p>
+      <div class="pie-mini">Nuestro cliente</div>
+      <div class="ebsa">EBSA · Empresa de Energía de Boyacá</div>
+    </div>
+    <div>
+      <h4>Contacto</h4>
+      <ul>
+        <li><a href={enlaceWhatsApp()} target="_blank" rel="noopener"><Icono nombre="brand-whatsapp" />WhatsApp</a></li>
+        <li><a href={empresa.telefonoEnlace ? `tel:${empresa.telefonoEnlace}` : '/contacto'}><Icono nombre="phone" />{empresa.telefono}</a></li>
+        <li><a href={`mailto:${empresa.correo}`}><Icono nombre="mail" />{empresa.correo}</a></li>
+        <li><a href="/contacto"><Icono nombre="map-pin" />{empresa.direccion}, Boyacá</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Servicios</h4>
+      <ul>
+        {servicios.map((s) => <li><a href={`/servicios/${s.slug}`}>{s.titulo}</a></li>)}
+      </ul>
+    </div>
+    <div>
+      <h4>Páginas</h4>
+      <ul>{menu.map((m) => <li><a href={m.ruta}>{m.texto}</a></li>)}</ul>
+      <h4 class="pie-h-horario">Horario</h4>
+      <ul>{empresa.horario.map((h) => <li><Icono nombre="clock" />{h.texto}: {h.horas}</li>)}</ul>
+    </div>
+  </div>
+  <div class="contenedor derechos">© {new Date().getFullYear()} ICON Ltda · Duitama, Boyacá</div>
+</footer>

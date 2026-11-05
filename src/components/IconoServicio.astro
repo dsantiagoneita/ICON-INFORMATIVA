@@ -1,0 +1,6 @@
+---
+import { iconosServicios } from '../data/iconos-servicios.js';
+interface Props { id: keyof typeof iconosServicios }
+const { id } = Astro.props;
+---
+<Fragment set:html={iconosServicios[id]} />

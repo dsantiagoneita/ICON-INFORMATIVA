@@ -1,0 +1,10 @@
+---
+// Franja sobria con los 13 municipios que se desplaza lentamente (sin interacción).
+import { municipios } from '../data/empresa.js';
+const nombres = municipios.map((m) => m.nombre);
+---
+<div class="marquesina" aria-label={`Municipios donde trabajamos: ${nombres.join(', ')}`}>
+  <div class="marquesina-pista" aria-hidden="true">
+    {[0, 1].map(() => nombres.map((n) => <span>{n}</span>))}
+  </div>
+</div>
