@@ -34,5 +34,8 @@ import { servicios } from '../data/servicios.js';
       <ul>{empresa.horario.map((h) => <li><Icono nombre="clock" />{h.texto}: {h.horas}</li>)}</ul>
     </div>
   </div>
-  <div class="contenedor derechos">© {new Date().getFullYear()} ICON Ltda · Duitama, Boyacá</div>
+  <div class="contenedor derechos">
+    <span>© {new Date().getFullYear()} ICON Ltda · Duitama, Boyacá</span>
+    <span>Contratista de la EBSA · Redes de baja y media tensión</span>
+  </div>
 </footer>

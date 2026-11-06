@@ -8,7 +8,7 @@ const telefono = empresa.telefonoEnlace ? `tel:${empresa.telefonoEnlace}` : '#';
 const mapa = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(empresa.direccion + ', Boyacá, Colombia')}`;
 
 const preguntas = [
-  { p: '¿En qué municipios trabajan?', r: 'En los 13 municipios de la provincia de Sugamuxi: Sogamoso, Aquitania, Cuítiva, Firavitoba, Gámeza, Iza, Mongua, Monguí, Nobsa, Pesca, Tibasosa, Tópaga y Tota.' },
+  { p: '¿En qué municipios trabajan?', r: 'En 21 municipios de Boyacá. En Sugamuxi: Sogamoso, Aquitania, Cuítiva, Firavitoba, Gámeza, Iza, Mongua, Monguí, Nobsa, Pesca, Tibasosa, Tópaga y Tota. En La Libertad: Labranzagrande, Pajarito, Pisba y Paya. Y además Betéitiva, Busbanzá, Corrales y Tasco, junto con puntos clave de la red como El Crucero y Vado Hondo.' },
   { p: '¿Cómo pido una cotización?', r: 'Escríbanos por WhatsApp contándonos qué necesita y en qué municipio. Si hace falta, programamos una visita técnica.' },
   { p: '¿Hacen los trámites ante la EBSA?', r: 'Sí. Como contratistas de la EBSA conocemos sus normas y acompañamos el proceso de aprobación de cada obra.' },
   { p: '¿Atienden daños en la red?', r: 'Sí, hacemos mantenimiento correctivo: cambio de postes, reparación de cable y reposición de elementos dañados.' },
@@ -16,6 +16,7 @@ const preguntas = [
 ---
 <Base
   titulo="Contacto · Redes eléctricas en Duitama y Sugamuxi"
+  fichaEmpresa
   descripcion="Contacte a ICON Ltda, Calle 11 # 17-46, Duitama, Boyacá, por WhatsApp, teléfono o correo. Redes eléctricas de baja y media tensión en Sugamuxi."
 >
   <Banda titulo="Hablemos de su proyecto" etiqueta="Contacto" miga="Contacto" resumen="Escríbanos, llámenos o envíenos un correo. Nuestra oficina está en Duitama y trabajamos en toda la zona Sugamuxi.">
@@ -24,27 +25,32 @@ const preguntas = [
     </div>
   </Banda>
 
-  <!-- Tres formas de contacto -->
+  <!-- Tres formas de contacto, en un solo panel (mismo estilo de la credencial de la EBSA) -->
   <section class="contacto-vias">
-    <div class="contenedor vias">
-      <a class="via-contacto wa rev" href={enlaceWhatsApp()} target="_blank" rel="noopener">
-        <span class="via-ico"><Icono nombre="brand-whatsapp" /></span>
-        <span class="via-nombre">WhatsApp</span>
-        <span class="via-dato">{empresa.telefono} · la forma más rápida</span>
-        <span class="via-ir">Escribir <Icono nombre="arrow-right" /></span>
-      </a>
-      <a class="via-contacto tel rev d1" href={telefono}>
-        <span class="via-ico"><Icono nombre="phone" /></span>
-        <span class="via-nombre">Teléfono</span>
-        <span class="via-dato">{empresa.telefono}</span>
-        <span class="via-ir">Llamar <Icono nombre="arrow-right" /></span>
-      </a>
-      <a class="via-contacto correo rev d2" href={`mailto:${empresa.correo}`}>
-        <span class="via-ico"><Icono nombre="mail" /></span>
-        <span class="via-nombre">Correo</span>
-        <span class="via-dato">{empresa.correo}</span>
-        <span class="via-ir">Enviar <Icono nombre="arrow-right" /></span>
-      </a>
+    <div class="contenedor">
+      <div class="panel-contacto">
+        <a class="pc-via" href={enlaceWhatsApp()} target="_blank" rel="noopener">
+          <span class="pc-ico"><Icono nombre="brand-whatsapp" /></span>
+          <span class="pc-nombre">WhatsApp</span>
+          <span class="pc-dato">{empresa.telefono}</span>
+          <span class="pc-nota">La forma más rápida de cotizar</span>
+          <span class="pc-ir">Escribir <Icono nombre="arrow-right" /></span>
+        </a>
+        <a class="pc-via" href={telefono}>
+          <span class="pc-ico"><Icono nombre="phone" /></span>
+          <span class="pc-nombre">Teléfono</span>
+          <span class="pc-dato">{empresa.telefono}</span>
+          <span class="pc-nota">En horario de atención</span>
+          <span class="pc-ir">Llamar <Icono nombre="arrow-right" /></span>
+        </a>
+        <a class="pc-via" href={`mailto:${empresa.correo}`}>
+          <span class="pc-ico"><Icono nombre="mail" /></span>
+          <span class="pc-nombre">Correo</span>
+          <span class="pc-dato pc-correo">{empresa.correo}</span>
+          <span class="pc-nota">Para propuestas y documentos</span>
+          <span class="pc-ir">Enviar <Icono nombre="arrow-right" /></span>
+        </a>
+      </div>
     </div>
   </section>
 
@@ -101,12 +107,6 @@ const preguntas = [
     </div>
   </section>
 
-  <div class="llamado">
-    <div class="contenedor">
-      <h2>¿Listo para empezar su proyecto?</h2>
-      <span class="iman"><a href={enlaceWhatsApp('Hola ICON, quisiera una cotización.')} target="_blank" rel="noopener" class="boton boton-oscuro"><Icono nombre="brand-whatsapp" /> Escríbanos</a></span>
-    </div>
-  </div>
 </Base>
 
 <script>

@@ -2,7 +2,7 @@
 import Logo from './Logo.astro';
 import BotonTema from './BotonTema.astro';
 import Icono from './Icono.astro';
-import { menu } from '../data/empresa.js';
+import { menu, enlaceWhatsApp } from '../data/empresa.js';
 
 const actual = Astro.url.pathname.replace(/\/$/, '') || '/';
 const activo = (ruta: string) => (ruta === '/' ? actual === '/' : actual.startsWith(ruta));
@@ -18,6 +18,7 @@ const activo = (ruta: string) => (ruta === '/' ? actual === '/' : actual.startsW
           ))}
         </ul>
       </nav>
+      <a class="boton-menu" href={enlaceWhatsApp('Hola ICON, quisiera una cotización.')} target="_blank" rel="noopener"><Icono nombre="brand-whatsapp" /><span>Cotizar</span></a>
       <BotonTema />
       <button class="hamburguesa" id="hamburguesa" type="button" aria-label="Abrir menú" aria-expanded="false" aria-controls="menu">
         <Icono nombre="menu-2" />

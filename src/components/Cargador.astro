@@ -1,0 +1,54 @@
+---
+// Pantalla de carga: dos postes con su cable y una luz que viaja de uno a otro.
+// La luz se anima con SVG (animateMotion), así no depende de las reglas de CSS del sitio.
+// Se muestra al recargar y al pasar de una página a otra (ver src/scripts/comunes.ts).
+import Logo from './Logo.astro';
+
+// Cables entre las crucetas de los dos postes
+const cableA = 'M62 44 Q130 84 198 44';
+const cableB = 'M34 44 Q130 100 226 44';
+---
+<div id="cargador" class="cargador" role="status" aria-label="Cargando página">
+  <div class="cargador-caja">
+    <svg class="cargador-postes" viewBox="0 0 260 150" aria-hidden="true">
+      <defs>
+        <radialGradient id="brillo-luz">
+          <stop offset="0" stop-color="#ffd85c" stop-opacity="1" />
+          <stop offset=".45" stop-color="#f5b700" stop-opacity=".55" />
+          <stop offset="1" stop-color="#f5b700" stop-opacity="0" />
+        </radialGradient>
+      </defs>
+      <!-- Suelo -->
+      <path class="cg-suelo" d="M8 138 H252" />
+      <!-- Postes y crucetas -->
+      <g class="cg-poste">
+        <path d="M48 138 V30" /><path d="M212 138 V30" />
+        <path d="M26 44 H70" /><path d="M190 44 H234" />
+      </g>
+      <!-- Aisladores -->
+      <g class="cg-aislador">
+        <circle cx="34" cy="41" r="3" /><circle cx="62" cy="41" r="3" />
+        <circle cx="198" cy="41" r="3" /><circle cx="226" cy="41" r="3" />
+      </g>
+      <!-- Cables -->
+      <path class="cg-cable" d={cableA} />
+      <path class="cg-cable" d={cableB} />
+      <!-- Tramo de cable que se energiza detrás de la luz -->
+      <path class="cg-energia" d={cableA} pathLength="100">
+        <animate attributeName="stroke-dashoffset" values="100;0;-100" dur="1.4s" repeatCount="indefinite" />
+      </path>
+      <!-- Luz que viaja de un poste al otro -->
+      <g>
+        <circle r="13" fill="url(#brillo-luz)" />
+        <circle r="3.6" class="cg-nucleo" />
+        <animateMotion path={cableA} dur="1.4s" repeatCount="indefinite" />
+      </g>
+      <g>
+        <circle r="10" fill="url(#brillo-luz)" opacity=".7" />
+        <circle r="2.8" class="cg-nucleo" />
+        <animateMotion path={cableB} dur="1.4s" begin="-0.7s" repeatCount="indefinite" />
+      </g>
+    </svg>
+    <Logo class="cargador-logo" />
+  </div>
+</div>

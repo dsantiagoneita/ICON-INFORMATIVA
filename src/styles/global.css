@@ -72,13 +72,16 @@ section { padding: 96px 0; }
 .aviso-construccion { background: var(--carbon); color: #d3d1c7; font-size: 12px; text-align: center; padding: 6px 10px; }
 #progreso { position: fixed; top: 0; left: 0; height: 3px; width: 0; background: var(--amarillo); z-index: 60; }
 #cabecera { position: sticky; top: 0; z-index: 50; background: var(--fondo); transition: box-shadow .3s, background .3s; }
-#cabecera .contenedor { display: flex; align-items: center; justify-content: space-between; height: 84px; transition: height .3s; }
+#cabecera .contenedor { display: flex; align-items: center; justify-content: space-between; height: 96px; transition: height .3s; }
 #cabecera.encogido { box-shadow: 0 6px 20px -10px rgb(0 0 0 / .25); }
-#cabecera.encogido .contenedor { height: 62px; }
+#cabecera.encogido .contenedor { height: 68px; }
 .logo { font-family: var(--titulo); font-size: 28px; font-weight: 600; letter-spacing: 1px; line-height: 1; transition: font-size .3s; white-space: nowrap; }
-#cabecera.encogido .logo { font-size: 23px; }
+#cabecera .logo { font-size: 42px; }
+#cabecera.encogido .logo { font-size: 32px; }
+@media (max-width: 960px) { #cabecera .logo { font-size: 35px; } #cabecera.encogido .logo { font-size: 29px; } }
 .logo .i { color: var(--rojo); }
-.logo small { font-size: 11px; background: var(--rojo); color: #fff; padding: 1px 5px; border-radius: 2px; vertical-align: 5px; margin-left: 3px; letter-spacing: .5px; }
+/* La etiqueta LTDA crece en proporción al logo */
+.logo small { font-size: .4em; background: var(--rojo); color: #fff; padding: .08em .4em; border-radius: 2px; vertical-align: .45em; margin-left: .12em; letter-spacing: .5px; }
 .cabecera-der { display: flex; align-items: center; gap: 22px; }
 #menu ul { display: flex; gap: 24px; list-style: none; }
 #menu a { font-family: var(--titulo); font-size: 14px; letter-spacing: 1px; text-transform: uppercase; position: relative; padding: 4px 0; }
@@ -597,3 +600,272 @@ section { padding: 96px 0; }
   .curva, .sube, .rev { opacity: 1; transform: none; }
   .cable { stroke-dashoffset: 0; }
 }
+
+/* =========================================================
+   ESTILO SOBRIO (decisión del 2026-11-06)
+   Sin animaciones ni efectos de movimiento, EXCEPTO:
+   · la escena de postes de la portada (.foto, .cable, .chispa-portada)
+   · el pulso del botón flotante de WhatsApp (.whatsapp)
+   · la palabra de la portada que cambia por los municipios (.rota-palabra)
+   Todo lo demás se muestra directamente en su estado final.
+   ========================================================= */
+*:not(.foto):not(.cable):not(.chispa-portada):not(.whatsapp):not(.rota-palabra),
+*:not(.whatsapp)::before,
+*::after { animation: none !important; }
+/* Transiciones: solo cambios suaves de color y opacidad (nada se mueve ni salta) */
+*, *::before, *::after {
+  transition-property: color, background-color, border-color, box-shadow, opacity, fill, stroke !important;
+  transition-duration: .2s !important;
+  transition-timing-function: ease !important;
+}
+.whatsapp { transition-property: transform, box-shadow !important; }
+
+/* Estado final de lo que antes entraba con animación */
+.curva, .portada > .contenedor { transform: none !important; }
+.sube, .rev, .cred-datos div, .plano-txt, .pin { opacity: 1 !important; transform: none !important; }
+.cred-linea, .via-contacto::before { transform: none !important; }
+.calles .avenida, .obra-tarjeta .cable-obra { stroke-dashoffset: 0 !important; }
+.obra-img > svg { transform: none !important; }
+.onda, .mapa circle.halo, .s-ico::after, .mv::after, #progreso { display: none !important; }
+.mapa circle.m { fill: var(--amarillo); }
+.mapa text { font-weight: 500; }
+
+/* Pasos y línea de tiempo: ya «energizados», sin esperar a bajar */
+.pasos .energia { width: 76%; }
+.pasos .paso .punto { border-color: var(--amarillo); color: var(--amarillo); }
+.linea-tiempo .carga { top: 6px; bottom: 6px; height: auto !important; }
+.linea-tiempo .bola { border-color: var(--amarillo); background: var(--amarillo); color: var(--carbon); }
+.linea-tiempo p { opacity: 1 !important; transform: none !important; }
+@media (max-width: 860px) { .pasos .energia { width: 3px; height: 100%; } }
+
+/* Sin desplazamientos, giros ni escalas al pasar el mouse (solo cambia el color) */
+.boton:hover, .item.activo, .caso:hover, .obra-tarjeta:hover, .obra-tarjeta.rev.ver:hover,
+.via-contacto:hover, .via-contacto.rev.ver:hover, .otro:hover, .otro.activo-ciclo, .tema:hover,
+.caso:hover > svg, .obra:hover .img svg, .obra-tarjeta:hover .obra-img > svg { transform: none !important; }
+.caso:hover { box-shadow: none; }
+
+/* Lista quieta de municipios */
+.marquesina::before, .marquesina::after { display: none; }
+.marquesina-pista { width: auto; max-width: 1180px; margin: 0 auto; padding: 0 16px; list-style: none; flex-wrap: wrap; justify-content: center; row-gap: 8px; }
+.marquesina-pista li { font-size: 13px; font-weight: 500; letter-spacing: 2.5px; text-transform: uppercase; color: #a3a29b; white-space: nowrap; padding: 0 16px; position: relative; }
+.marquesina-pista li + li::before { content: ''; position: absolute; left: -2px; top: 50%; width: 4px; height: 4px; margin-top: -2px; border-radius: 50%; background: var(--amarillo); opacity: .7; }
+
+/* Zona de trabajo: se ilumina el municipio señalado con el cursor (sin movimiento, solo color) */
+.mapa .muni { cursor: pointer; }
+.mapa .zona-toque { fill: transparent; }
+.mapa circle.m { fill: var(--texto-2); }
+.mapa circle.halo { display: block !important; fill: rgb(245 183 0 / .18); stroke: var(--amarillo); stroke-width: 2; opacity: 0; }
+.mapa .muni.luz circle.halo { opacity: 1; }
+.mapa .muni.luz circle.m { fill: var(--amarillo); transform: scale(1.35); }
+.mapa .muni.luz text { font-weight: 700; }
+.mapa.con-luz .muni:not(.luz) text, .mapa.con-luz .muni:not(.luz) circle.m { opacity: .4; }
+.municipios li { cursor: pointer; }
+.municipios li.luz { background: var(--amarillo); border-color: var(--amarillo); color: var(--carbon); }
+
+/* Quiénes somos: presentación en texto (sin repetir la ilustración del Inicio) */
+.intro-empresa > p, .intro-empresa > h2 { max-width: 780px; }
+.intro-empresa p { color: var(--texto-2); font-size: 17px; }
+.intro-empresa p + p { margin-top: 14px; }
+
+/* Galería de obras: flechas a los lados (computador); en celular se desliza con el dedo */
+.ver-todos { display: inline-flex; align-items: center; gap: 6px; font-weight: 600; font-size: 14px; color: var(--acento-txt); }
+.ver-todos:hover { text-decoration: underline; }
+.galeria { position: relative; }
+.carril, .carril.arrastrando { cursor: auto; }
+.flecha-lado { position: absolute; top: 125px; transform: translateY(-50%); z-index: 2; width: 52px; height: 52px; border-radius: 50%; border: 1px solid var(--linea); background: var(--fondo); color: var(--texto); display: grid; place-items: center; font-size: 26px; cursor: pointer; box-shadow: 0 8px 24px -12px rgb(0 0 0 / .45); }
+.flecha-lado:hover { background: var(--amarillo); border-color: var(--amarillo); color: var(--carbon); }
+.flecha-lado:disabled { opacity: .35; cursor: default; background: var(--fondo); border-color: var(--linea); color: var(--texto); }
+.flecha-lado.izq { left: -26px; }
+.flecha-lado.der { right: -26px; }
+@media (max-width: 1260px) { .flecha-lado.izq { left: 8px; } .flecha-lado.der { right: 8px; } }
+@media (max-width: 760px), (hover: none) { .flecha-lado { display: none; } }
+
+/* Mapa con 21 municipios y 2 puntos clave */
+.mapa .m { fill: var(--texto-2); }
+.mapa .muni.luz .m { fill: var(--amarillo); }
+.mapa.con-luz .muni:not(.luz) .m { opacity: .4; }
+.mapa .punto-clave .m { fill: var(--fondo-2); stroke: var(--amarillo); stroke-width: 2.5; }
+.mapa .punto-clave.luz .m { fill: var(--amarillo); }
+.mapa .punto-clave text { font-style: italic; }
+.mapa text { font-size: 13px; }
+@media (max-width: 640px) { .mapa text { font-size: 14px; } .mapa { padding: 8px; } }
+.zona-pista { font-size: 14px; margin-top: 12px; }
+.leyenda-mapa { list-style: none; display: flex; gap: 22px; margin-top: 18px; font-size: 14px; color: var(--texto-2); }
+.leyenda-mapa li { display: flex; align-items: center; gap: 8px; }
+.ley-muni { width: 12px; height: 12px; border-radius: 50%; background: var(--texto-2); }
+.ley-punto { width: 11px; height: 11px; transform: rotate(45deg); border: 2.5px solid var(--amarillo); }
+@media (hover: none) { .zona-pista { display: none; } }
+
+/* Fotos reales de obras (Inicio y Proyectos) */
+.obra .img img, .obra-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.obra .img { background: var(--fondo-2); }
+.obra-img { height: 240px; background: var(--fondo-2); }
+article.obra-tarjeta:hover { border-color: var(--linea); }
+
+/* Página de error 404 */
+.error-404 { min-height: 55vh; display: flex; align-items: center; }
+.error-404 p { color: var(--texto-2); font-size: 17px; max-width: 560px; }
+.error-enlaces { list-style: none; display: flex; flex-wrap: wrap; gap: 10px; margin: 24px 0 28px; }
+.error-enlaces a { display: inline-flex; align-items: center; gap: 6px; padding: 10px 16px; border: 1px solid var(--linea); border-radius: 999px; font-weight: 600; font-size: 14px; }
+.error-enlaces a:hover { border-color: var(--amarillo); color: var(--acento-txt); }
+
+/* =========================================================
+   PANTALLA DE CARGA: dos postes y una luz que viaja entre ellos
+   ========================================================= */
+.cargador { position: fixed; inset: 0; z-index: 200; display: grid; place-items: center; background: var(--fondo); opacity: 1; visibility: visible; transition-property: opacity, visibility !important; transition-duration: .35s !important; }
+.cargador.oculto { opacity: 0; visibility: hidden; pointer-events: none; }
+.cargador-caja { display: flex; flex-direction: column; align-items: center; gap: 18px; }
+.cargador-postes { width: min(260px, 64vw); height: auto; overflow: visible; }
+.cg-suelo { stroke: var(--linea); stroke-width: 2; stroke-linecap: round; }
+.cg-poste path { stroke: var(--texto-2); stroke-width: 5; stroke-linecap: round; fill: none; }
+.cg-aislador circle { fill: var(--fondo); stroke: var(--texto-2); stroke-width: 2; }
+.cg-cable { fill: none; stroke: var(--amarillo); stroke-opacity: .28; stroke-width: 2.2; }
+.cg-energia { fill: none; stroke: var(--amarillo); stroke-width: 2.6; stroke-linecap: round; stroke-dasharray: 22 100; filter: drop-shadow(0 0 4px rgb(245 183 0 / .8)); }
+.cg-nucleo { fill: #fff6d6; }
+.cargador-logo { font-size: 30px; color: var(--texto); }
+
+/* =========================================================
+   CONTACTO: un solo panel con las tres formas de contacto
+   ========================================================= */
+.contacto-vias { padding-bottom: 72px; }
+.panel-contacto { display: grid; grid-template-columns: repeat(3, 1fr); background: var(--carbon); border: 1px solid var(--carbon); border-radius: var(--radio); overflow: hidden; color: #f1efe8; }
+.oscuro .panel-contacto { border-color: var(--linea); }
+.pc-via { display: flex; flex-direction: column; gap: 4px; padding: 34px 32px 30px; border-left: 1px solid rgb(255 255 255 / .1); }
+.pc-via:first-child { border-left: 0; }
+.pc-via:hover { background: rgb(255 255 255 / .04); }
+.pc-ico { width: 52px; height: 52px; border-radius: 50%; border: 1.5px solid var(--amarillo); color: var(--amarillo); display: grid; place-items: center; font-size: 24px; margin-bottom: 14px; }
+.pc-via:hover .pc-ico { background: var(--amarillo); color: var(--carbon); }
+.pc-nombre { font-size: 12px; font-weight: 600; letter-spacing: 2.5px; text-transform: uppercase; color: var(--amarillo); }
+.pc-dato { font-family: var(--titulo); font-size: 26px; font-weight: 600; letter-spacing: .5px; line-height: 1.2; color: #fff; }
+.pc-correo { font-family: var(--cuerpo); font-size: 18px; letter-spacing: 0; word-break: break-word; }
+.pc-nota { font-size: 14px; color: #a3a29b; }
+.pc-ir { margin-top: 16px; display: inline-flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 600; color: #f1efe8; }
+.pc-via:hover .pc-ir { color: var(--amarillo); }
+@media (max-width: 860px) {
+  .panel-contacto { grid-template-columns: 1fr; }
+  .pc-via { border-left: 0; border-top: 1px solid rgb(255 255 255 / .1); padding: 26px 24px; }
+  .pc-via:first-child { border-top: 0; }
+}
+
+/* =========================================================
+   PULIDO GENERAL (mismos estilos, más consistentes)
+   ========================================================= */
+:root { --radio: 20px; --radio-sm: 14px; }
+/* Esquinas iguales en todas las tarjetas y paneles */
+.panel, .marco-foto, .mapa, .obra, .obra-tarjeta, .caso, .faq-item, .mv, .credencial, .plano, .comparador,
+.cliente-principal .credencial, .panel-contacto { border-radius: var(--radio); }
+.item, .otro, .item .ico, .otro .ico { border-radius: var(--radio-sm); }
+/* Bordes finos y parejos en las tarjetas claras */
+.caso, .faq-item, .mv { border: 1px solid var(--linea); }
+.obra { border: 1px solid var(--linea); }
+/* Menú superior: fondo levemente translúcido y una línea fina abajo */
+#cabecera { background: color-mix(in srgb, var(--fondo) 90%, transparent); -webkit-backdrop-filter: saturate(160%) blur(10px); backdrop-filter: saturate(160%) blur(10px); border-bottom: 1px solid var(--linea); }
+@media (max-width: 960px) { #menu { background: var(--fondo); border-bottom: 1px solid var(--linea); } }
+/* Botones y enlaces: tamaño y foco consistentes */
+.boton { min-height: 46px; }
+a:focus-visible, button:focus-visible { outline: 3px solid var(--amarillo); outline-offset: 3px; border-radius: 6px; }
+/* Pie de página más ordenado */
+.pie { border-top: 3px solid var(--amarillo); }
+.pie-rejilla { align-items: start; }
+.pie li a, .pie li { display: flex; align-items: flex-start; gap: 0; line-height: 1.5; }
+.pie li svg { margin-top: 3px; }
+.derechos { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; text-align: left; }
+/* Encabezado de páginas internas: un poco más de aire */
+.banda { padding: 84px 0 72px; }
+@media (max-width: 760px) { .banda { padding: 56px 0 48px; } }
+
+/* Portada: palabra que cambia por los municipios (aparece suave, sin rebotes) */
+.portada .rota .rota-palabra { display: inline-block; background: var(--carbon); color: var(--amarillo); padding: 2px 14px 4px; border-radius: 10px; white-space: nowrap; animation: none; }
+.portada .rota .rota-palabra.entra { animation: palabraEntra .45s cubic-bezier(.2, .7, .2, 1) both !important; }
+@keyframes palabraEntra { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+@media (max-width: 420px) { .portada .rota .rota-palabra { font-size: .82em; } }
+
+/* =========================================================
+   IDENTIDAD: el cable como sello, rótulos numerados y plano técnico
+   ========================================================= */
+/* Separador en forma de cable entre secciones */
+.separador-cable { position: relative; height: 34px; margin-top: -6px; margin-bottom: -6px; }
+.separador-cable svg { width: 100%; height: 100%; overflow: visible; }
+.sc-cable { fill: none; stroke: var(--amarillo); stroke-width: 1.5; stroke-opacity: .55; }
+.sc-aislador { position: absolute; top: 2px; width: 9px; height: 9px; border-radius: 50%; background: var(--fondo); border: 2px solid var(--amarillo); }
+.sc-aislador.izq { left: 2px; }
+.sc-aislador.der { right: 2px; }
+
+/* Rótulos de sección numerados: «01 — Servicios» */
+main { counter-reset: seccion; }
+main section:not(.portada):not(.error-404):not(.cierre) .etiqueta::before {
+  counter-increment: seccion;
+  content: counter(seccion, decimal-leading-zero);
+  display: inline-block; margin-right: 10px; padding-right: 10px; border-right: 1px solid currentColor; opacity: .75;
+}
+
+/* Textura muy tenue de plano técnico en las franjas oscuras */
+.banda:not(.con-foto), .proceso, .cifras, .pie {
+  background-image:
+    linear-gradient(rgb(255 255 255 / .035) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(255 255 255 / .035) 1px, transparent 1px);
+  background-size: 36px 36px;
+}
+
+/* =========================================================
+   MENÚ: botón «Cotizar»
+   ========================================================= */
+.boton-menu { display: inline-flex; align-items: center; gap: 8px; height: 44px; padding: 0 18px; border-radius: 999px; background: var(--amarillo); color: var(--carbon); font-weight: 600; font-size: 14px; white-space: nowrap; }
+.boton-menu:hover { background: var(--carbon); color: var(--amarillo); }
+.oscuro .boton-menu:hover { background: #fff; color: var(--carbon); }
+.boton-menu svg { font-size: 18px; }
+@media (max-width: 1180px) { #menu ul { gap: 18px; } .boton-menu { width: 44px; padding: 0; justify-content: center; } .boton-menu span { display: none; } }
+@media (max-width: 960px) { .boton-menu { width: auto; padding: 0 14px; } .boton-menu span { display: inline; } }
+@media (max-width: 420px) { .boton-menu { width: 44px; padding: 0; } .boton-menu span { display: none; } }
+
+/* =========================================================
+   FOTOS REALES
+   ========================================================= */
+/* Encabezado de servicio con foto de fondo oscurecida */
+.banda.con-foto { background: var(--carbon); }
+.banda.con-foto::after { display: none; }
+.banda-foto { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: .9; }
+.banda.con-foto::before { content: ''; position: absolute; inset: 0; z-index: 1; background:
+  linear-gradient(90deg, rgb(20 20 19 / .94) 0%, rgb(20 20 19 / .82) 45%, rgb(20 20 19 / .55) 100%),
+  linear-gradient(0deg, rgb(20 20 19 / .6), transparent 40%); }
+.banda.con-foto .contenedor { z-index: 2; }
+@media (max-width: 760px) { .banda.con-foto::before { background: linear-gradient(0deg, rgb(20 20 19 / .95) 0%, rgb(20 20 19 / .8) 100%); } }
+
+/* Galería «En obra» de cada servicio */
+.galeria-servicio { display: grid; gap: 18px; margin-top: 28px; }
+.galeria-servicio.n2 { grid-template-columns: 1fr 1fr; }
+.galeria-servicio.n1 { grid-template-columns: minmax(0, 760px); }
+.galeria-servicio figure { margin: 0; border-radius: var(--radio); overflow: hidden; aspect-ratio: 4 / 3; background: var(--fondo-2); border: 1px solid var(--linea); }
+.galeria-servicio img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.galeria-nota { margin-top: 12px; font-size: 13px; color: var(--texto-2); }
+@media (max-width: 640px) { .galeria-servicio.n2 { grid-template-columns: 1fr; } }
+
+/* Quiénes somos: presentación con la foto del equipo */
+.intro-empresa.con-foto { display: grid; grid-template-columns: 1.1fr .9fr; gap: 48px; align-items: center; }
+.foto-equipo { margin: 0; border-radius: var(--radio); overflow: hidden; aspect-ratio: 4 / 3; border: 1px solid var(--linea); background: var(--fondo-2); }
+.foto-equipo img { width: 100%; height: 100%; object-fit: cover; object-position: center 35%; display: block; }
+@media (max-width: 860px) { .intro-empresa.con-foto { grid-template-columns: 1fr; gap: 28px; } }
+
+/* Acabado uniforme de las fotos de tarjetas: degradado suave abajo */
+.obra .img, .obra-img { position: relative; }
+.obra .img::after, .obra-img::after { content: ''; position: absolute; inset: auto 0 0 0; height: 45%; background: linear-gradient(0deg, rgb(20 20 19 / .45), transparent); pointer-events: none; }
+.obra-servicio { z-index: 1; }
+
+/* =========================================================
+   CIERRE DE PÁGINA: título y los tres contactos en una línea
+   ========================================================= */
+.cierre { background: var(--amarillo); color: var(--carbon); padding: 72px 0; }
+.cierre-rejilla { display: grid; grid-template-columns: 1fr 1.15fr; gap: 40px; align-items: center; }
+.cierre-etq { font-size: 12px; font-weight: 600; letter-spacing: 2.5px; text-transform: uppercase; color: #5a4100; }
+.cierre h2 { font-size: clamp(30px, 3.6vw, 46px); margin: 8px 0 10px; }
+.cierre p { color: #4a3a10; font-size: 16px; }
+.cierre-vias { list-style: none; display: grid; gap: 10px; }
+.cierre-via { display: flex; align-items: center; gap: 14px; padding: 14px 18px; border-radius: var(--radio-sm); background: rgb(29 29 27 / .08); border: 1px solid rgb(29 29 27 / .18); font-weight: 600; font-size: 16px; }
+.cierre-via:hover { background: rgb(29 29 27 / .16); }
+.cierre-via.principal { background: var(--carbon); color: #fff; border-color: var(--carbon); }
+.cierre-via.principal:hover { background: #000; }
+.cierre-via > svg { font-size: 22px; flex-shrink: 0; }
+.cierre-via.principal > svg { color: #25d366; }
+.cierre-via span { display: flex; flex-direction: column; line-height: 1.25; word-break: break-word; }
+.cierre-via small { font-size: 11px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; opacity: .7; }
+@media (max-width: 860px) { .cierre { padding: 56px 0; } .cierre-rejilla { grid-template-columns: 1fr; gap: 24px; } }

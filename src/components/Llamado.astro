@@ -1,0 +1,22 @@
+---
+// Bloque de cierre de cada página: título y las tres formas de contacto en una línea.
+import Icono from './Icono.astro';
+import { empresa, enlaceWhatsApp } from '../data/empresa.js';
+
+interface Props { titulo: string; mensaje?: string }
+const { titulo, mensaje = 'Hola ICON, quisiera una cotización.' } = Astro.props;
+---
+<section class="cierre">
+  <div class="contenedor cierre-rejilla">
+    <div>
+      <span class="cierre-etq">Hablemos</span>
+      <h2>{titulo}</h2>
+      <p>Respondemos en horario de atención. Por WhatsApp es más rápido.</p>
+    </div>
+    <ul class="cierre-vias">
+      <li><a class="cierre-via principal" href={enlaceWhatsApp(mensaje)} target="_blank" rel="noopener"><Icono nombre="brand-whatsapp" /><span><small>WhatsApp</small>{empresa.telefono}</span></a></li>
+      <li><a class="cierre-via" href={`tel:${empresa.telefonoEnlace}`}><Icono nombre="phone" /><span><small>Llamar</small>{empresa.telefono}</span></a></li>
+      <li><a class="cierre-via" href={`mailto:${empresa.correo}`}><Icono nombre="mail" /><span><small>Correo</small>{empresa.correo}</span></a></li>
+    </ul>
+  </div>
+</section>

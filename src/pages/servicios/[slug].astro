@@ -4,6 +4,8 @@ import Icono from '../../components/Icono.astro';
 import IconoServicio from '../../components/IconoServicio.astro';
 import { servicios, grupos } from '../../data/servicios.js';
 import { empresa, enlaceWhatsApp } from '../../data/empresa.js';
+import { fotosServicios } from '../../data/fotos-servicios.js';
+import Llamado from '../../components/Llamado.astro';
 
 export function getStaticPaths() {
   return servicios.map((s) => ({ params: { slug: s.slug }, props: { s } }));
@@ -11,12 +13,14 @@ export function getStaticPaths() {
 const { s } = Astro.props;
 const otros = servicios.filter((x) => x.slug !== s.slug);
 const wa = enlaceWhatsApp(`Hola ICON, quiero cotizar: ${s.titulo}`);
+const fotos = fotosServicios[s.slug];
 ---
-<Base titulo={`${s.titulo} en Sogamoso y Sugamuxi`} descripcion={`${s.descripcion} ICON Ltda, contratista de la EBSA en Boyacá.`}>
+<Base titulo={`${s.titulo} en Boyacá`} descripcion={`${s.corto} ICON Ltda, contratista de la EBSA en Boyacá.`}>
   <!-- Portada del servicio -->
-  <div class="banda">
+  <div class="banda con-foto">
+    {fotos?.portada && <img class="banda-foto" src={fotos.portada} alt="" aria-hidden="true" style={`object-position:${fotos.posicion}`} fetchpriority="high" />}
     <div class="contenedor s-portada">
-      <div class={`s-ico vivo ${s.grupo}`}><IconoServicio id={s.icono} /></div>
+      <div class={`s-ico ${s.grupo}`}><IconoServicio id={s.icono} /></div>
       <div>
         <nav class="miga" aria-label="Ruta"><a href="/">Inicio</a><Icono nombre="chevron-right" /><a href="/servicios">Servicios</a><Icono nombre="chevron-right" />{s.titulo}</nav>
         <span class="etiqueta">{grupos[s.grupo].nombre} · {s.n}</span>
@@ -24,7 +28,7 @@ const wa = enlaceWhatsApp(`Hola ICON, quiero cotizar: ${s.titulo}`);
         <p>{s.descripcion}</p>
         <ul class="chips">{s.incluye.map((x) => <li><Icono nombre="check" /> {x}</li>)}</ul>
         <div class="acciones">
-          <span class="iman"><a class="boton boton-wa" href={wa} target="_blank" rel="noopener"><Icono nombre="brand-whatsapp" />Cotizar este servicio</a></span>
+          <a class="boton boton-wa" href={wa} target="_blank" rel="noopener"><Icono nombre="brand-whatsapp" />Cotizar este servicio</a>
           <a class="boton boton-borde-claro" href={empresa.telefonoEnlace ? `tel:${empresa.telefonoEnlace}` : '/contacto'}><Icono nombre="phone" />Llamar</a>
         </div>
       </div>
@@ -56,35 +60,20 @@ const wa = enlaceWhatsApp(`Hola ICON, quiero cotizar: ${s.titulo}`);
     </div>
   </section>
 
-  <!-- Antes y después (ilustración de ejemplo; PENDIENTE fotos reales) -->
-  <section>
-    <div class="contenedor">
-      <div class="rev"><span class="etiqueta">Resultados</span><h2 class="titulo-seccion">Antes y después</h2></div>
-      <div class="comparador rev" data-comparador>
-        <svg viewBox="0 0 800 400" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-          <rect width="800" height="400" fill="#8d8a80" /><rect y="300" width="800" height="100" fill="#6c6a5f" />
-          <path d="M0 300 Q200 260 400 290 T800 280 V300 H0Z" fill="#77756a" />
-          <g stroke="#4a3a28" stroke-width="12" stroke-linecap="round"><path d="M180 320 L205 90" /><path d="M560 320 L520 110" /></g>
-          <g stroke="#4a3a28" stroke-width="7"><path d="M150 112 L250 98" /><path d="M480 128 L570 116" /></g>
-          <g fill="none" stroke="#2b2b28" stroke-width="2.5"><path d="M0 140 Q90 210 160 110 Q360 230 490 128 Q640 240 800 150" /><path d="M0 120 Q100 190 240 100 Q380 200 560 118 Q700 210 800 130" /><path d="M200 140 Q260 260 330 200 Q380 160 420 260" /></g>
-          <text x="30" y="372" fill="#f1efe8" font-family="Inter,sans-serif" font-size="17">Poste inclinado, cables enredados</text>
-        </svg>
-        <svg class="despues" viewBox="0 0 800 400" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-          <rect width="800" height="400" fill="#9fc4dc" /><rect y="300" width="800" height="100" fill="#6f8f4e" />
-          <path d="M0 300 Q200 260 400 290 T800 280 V300 H0Z" fill="#7da15a" />
-          <g fill="#d6d3c9"><rect x="186" y="80" width="16" height="240" rx="3" /><rect x="546" y="80" width="16" height="240" rx="3" /></g>
-          <g fill="#1d1d1b"><rect x="140" y="96" width="108" height="8" rx="2" /><rect x="500" y="96" width="108" height="8" rx="2" /></g>
-          <g fill="#f5b700"><circle cx="148" cy="92" r="6" /><circle cx="194" cy="92" r="6" /><circle cx="240" cy="92" r="6" /><circle cx="508" cy="92" r="6" /><circle cx="554" cy="92" r="6" /><circle cx="600" cy="92" r="6" /></g>
-          <g fill="none" stroke="#1d1d1b" stroke-width="2.5"><path d="M0 110 Q74 120 148 92 Q328 130 508 92 Q654 124 800 104" /><path d="M0 110 Q97 122 194 92 Q374 130 554 92 Q677 124 800 104" /><path d="M0 110 Q120 122 240 92 Q420 130 600 92 Q700 120 800 104" /></g>
-          <rect x="200" y="150" width="40" height="52" rx="8" fill="#5f6b70" /><path d="M220 162 l-7 13 h8 l-5 12" stroke="#f5b700" stroke-width="3" fill="none" />
-          <text x="770" y="372" text-anchor="end" fill="#1d1d1b" font-family="Inter,sans-serif" font-size="17">Postes de concreto, red ordenada</text>
-        </svg>
-        <span class="rot r1">Antes</span><span class="rot r2">Después</span>
-        <span class="mango" aria-hidden="true"><span><Icono nombre="arrows-horizontal" /></span></span>
-        <input type="range" min="0" max="100" value="50" aria-label="Deslizar para comparar antes y después" />
+  <!-- Fotos reales del servicio (solo si hay fotos buenas para este servicio) -->
+  {fotos?.galeria?.length > 0 && (
+    <section>
+      <div class="contenedor">
+        <span class="etiqueta">En obra</span><h2 class="titulo-seccion">Trabajos de este tipo</h2>
+        <div class={`galeria-servicio n${fotos.galeria.length}`}>
+          {fotos.galeria.map((g) => (
+            <figure><img src={g.src} alt={g.alt} loading="lazy" decoding="async" /></figure>
+          ))}
+        </div>
+        <p class="galeria-nota">Fotos reales de trabajos de ICON.</p>
       </div>
-    </div>
-  </section>
+    </section>
+  )}
 
   <!-- Otros servicios -->
   <section style="background:var(--fondo-2)">
@@ -100,10 +89,5 @@ const wa = enlaceWhatsApp(`Hola ICON, quiero cotizar: ${s.titulo}`);
     </div>
   </section>
 
-  <div class="llamado">
-    <div class="contenedor">
-      <h2>¿Necesita {s.titulo.toLowerCase()}?</h2>
-      <span class="iman"><a class="boton boton-oscuro" href={wa} target="_blank" rel="noopener"><Icono nombre="brand-whatsapp" /> Escríbanos por WhatsApp</a></span>
-    </div>
-  </div>
+  <Llamado titulo={`¿Necesita ${s.titulo.toLowerCase()}?`} mensaje={`Hola ICON, quiero cotizar: ${s.titulo}`} />
 </Base>

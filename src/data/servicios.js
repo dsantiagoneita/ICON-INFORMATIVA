@@ -15,7 +15,7 @@ export const servicios = [
     titulo: 'Redes de media tensión',
     corto: 'Construcción de redes de media tensión según la norma de la EBSA, hasta su energización.',
     descripcion:
-      'Construimos redes de media tensión en los 13 municipios de Sugamuxi, cumpliendo las normas de la EBSA: postes, crucetas, aisladores, cable y puesta en servicio.',
+      'Construimos redes de media tensión en 21 municipios de Sugamuxi y sus alrededores, cumpliendo las normas de la EBSA: postes, crucetas, aisladores, cable y puesta en servicio.',
     incluye: ['Postes y crucetas', 'Aisladores', 'Cable desnudo y ecológico', 'Puesta en servicio'],
     casos: [
       { icono: 'building-community', titulo: 'Nuevas veredas o barrios', texto: 'Llevar energía a zonas que aún no tienen red cercana.' },

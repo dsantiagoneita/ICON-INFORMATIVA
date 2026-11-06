@@ -1,0 +1,20 @@
+---
+// Página que se muestra cuando alguien entra a una dirección que no existe.
+import Base from '../layouts/Base.astro';
+import Icono from '../components/Icono.astro';
+import { menu, enlaceWhatsApp } from '../data/empresa.js';
+---
+<Base titulo="Página no encontrada" descripcion="La página que busca no existe. Vuelva al inicio de ICON Ltda." indexar={false}>
+  <section class="error-404">
+    <div class="contenedor">
+      <span class="etiqueta">Error 404</span>
+      <h1 class="titulo-seccion">Esta página no existe</h1>
+      <div class="raya"></div>
+      <p>Es posible que la dirección esté mal escrita o que la página haya cambiado de lugar. Puede seguir por aquí:</p>
+      <ul class="error-enlaces">
+        {menu.map((m) => <li><a href={m.ruta}>{m.texto} <Icono nombre="arrow-right" /></a></li>)}
+      </ul>
+      <a class="boton boton-wa" href={enlaceWhatsApp()} target="_blank" rel="noopener"><Icono nombre="brand-whatsapp" /> Escríbanos por WhatsApp</a>
+    </div>
+  </section>
+</Base>

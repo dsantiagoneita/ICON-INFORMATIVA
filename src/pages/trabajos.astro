@@ -1,0 +1,44 @@
+---
+import Llamado from '../components/Llamado.astro';
+import Base from '../layouts/Base.astro';
+import Banda from '../components/Banda.astro';
+import Icono from '../components/Icono.astro';
+import IconoServicio from '../components/IconoServicio.astro';
+import { proyectos } from '../data/proyectos.js';
+import { servicios } from '../data/servicios.js';
+import { enlaceWhatsApp } from '../data/empresa.js';
+
+const servicio = (slug: string | null) => (slug ? servicios.find((s) => s.slug === slug) : undefined);
+---
+<Base
+  titulo="Trabajos realizados · Redes eléctricas en Boyacá"
+  descripcion="Trabajos de ICON Ltda en Boyacá: reconectadores, subestaciones, transformadores tipo pedestal, alumbrado público y redes subterráneas."
+>
+  <Banda titulo="Nuestro trabajo" etiqueta="Trabajos realizados" miga="Trabajos realizados" resumen="Algunos de los trabajos que hacemos en redes eléctricas de baja y media tensión, con fotos reales de nuestras obras." />
+
+  <section>
+    <div class="contenedor">
+      <div class="obras">
+        {proyectos.map((p) => {
+          const s = servicio(p.servicio);
+          const Etiqueta = s ? 'a' : 'article';
+          return (
+            <Etiqueta class="obra-tarjeta" href={s ? `/servicios/${s.slug}` : undefined}>
+              <div class="obra-img">
+                <img src={p.foto} alt={p.alt} loading="lazy" decoding="async" style={`object-position:${p.posicion}`} />
+                <span class={`obra-servicio ${s?.grupo ?? "construccion"}`}><IconoServicio id={s?.icono ?? p.icono} /></span>
+              </div>
+              <div class="obra-info">
+                <h2>{p.titulo}</h2>
+                <p>{p.texto}</p>
+                <span class="obra-tipo">{s ? <>Ver servicio: {s.titulo} <Icono nombre="arrow-right" /></> : p.tipo}</span>
+              </div>
+            </Etiqueta>
+          );
+        })}
+      </div>
+    </div>
+  </section>
+
+  <Llamado titulo="¿Necesita un trabajo como estos?" mensaje="Hola ICON, quisiera cotizar un trabajo." />
+</Base>

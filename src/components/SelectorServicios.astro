@@ -33,7 +33,7 @@ const claves = Object.keys(grupos) as (keyof typeof grupos)[];
         <ul class="lista" data-grupo={g} hidden={gi !== 0}>
           {servicios.filter((s) => s.grupo === g).map((s, i) => (
             <li>
-              <button type="button" class:list={['item', s.grupo, { activo: gi === 0 && i === 0, vivo: gi === 0 && i === 0 }]} data-id={s.slug} style={`--i:${i}`}>
+              <button type="button" class:list={['item', s.grupo, { activo: gi === 0 && i === 0 }]} data-id={s.slug} style={`--i:${i}`}>
                 <span class="ico"><IconoServicio id={s.icono} /></span>
                 <span class="txt"><span class="num">{s.n}</span><span class="nombre">{s.titulo}</span></span>
                 <Icono nombre="arrow-right" class="fl" />
@@ -49,7 +49,7 @@ const claves = Object.keys(grupos) as (keyof typeof grupos)[];
         <article class={`panel ${s.grupo}`} data-id={s.slug} hidden={i !== 0}>
           <div class="panel-fondo" aria-hidden="true"><IconoServicio id={s.icono} /></div>
           <div class="panel-contenido">
-            <div class="panel-ico vivo"><IconoServicio id={s.icono} /></div>
+            <div class="panel-ico"><IconoServicio id={s.icono} /></div>
             <span class="panel-grupo">{grupos[s.grupo].nombre} · {s.n}</span>
             <h3>{s.titulo}</h3>
             <p>{s.corto}</p>
@@ -66,6 +66,8 @@ const claves = Object.keys(grupos) as (keyof typeof grupos)[];
 </div>
 
 <script>
+  // Selector de servicios: cambia de servicio al pasar el mouse (computador) o al tocar (celular).
+  // Sin animaciones: el cambio es inmediato.
   document.querySelectorAll<HTMLElement>('[data-selector]').forEach((raiz) => {
     const pestanas = raiz.querySelector<HTMLElement>('.pestanas')!;
     const pildora = pestanas.querySelector<HTMLElement>('.pildora')!;
@@ -84,65 +86,25 @@ const claves = Object.keys(grupos) as (keyof typeof grupos)[];
     const elegir = (id: string) => {
       if (id === actual) return;
       actual = id;
-      raiz.querySelectorAll<HTMLElement>('.item').forEach((el) => {
-        const on = el.dataset.id === id;
-        el.classList.toggle('activo', on);
-        el.classList.toggle('vivo', on);
-        // En celular la lista es una fila deslizable: llevar el elegido a la vista sin mover la página
-        if (on && !conMouse.matches) {
-          const lista = el.closest<HTMLElement>('.lista')!;
-          const li = el.parentElement!;
-          lista.scrollTo({ left: li.offsetLeft - lista.offsetLeft - 8, behavior: 'smooth' });
-        }
-      });
-      paneles.forEach((p) => {
-        const on = p.dataset.id === id;
-        p.hidden = !on;
-        if (on) { p.classList.remove('entra'); void p.offsetWidth; p.classList.add('entra'); }
-      });
+      raiz.querySelectorAll<HTMLElement>('.item').forEach((el) => el.classList.toggle('activo', el.dataset.id === id));
+      paneles.forEach((p) => (p.hidden = p.dataset.id !== id));
     };
 
     botonesGrupo.forEach((b) => b.addEventListener('click', () => {
       const g = b.dataset.grupo!;
       botonesGrupo.forEach((x) => x.setAttribute('aria-selected', String(x === b)));
       pestanas.classList.toggle('mant', g === 'mantenimiento');
-      listas.forEach((l) => {
-        const on = l.dataset.grupo === g;
-        l.hidden = !on;
-        if (on) { l.classList.remove('entra'); void l.offsetWidth; l.classList.add('entra'); }
-      });
+      listas.forEach((l) => (l.hidden = l.dataset.grupo !== g));
       moverPildora();
       const primero = raiz.querySelector<HTMLElement>(`.lista[data-grupo="${g}"] .item`)!;
       elegir(primero.dataset.id!);
     }));
 
-    // En pantallas táctiles el selector avanza solo mientras está a la vista; si la persona toca, se detiene.
-    let auto: number | undefined;
-    let tocado = false;
-    const reducido = matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const siguiente = () => {
-      const visibles = [...raiz.querySelectorAll<HTMLElement>('.lista:not([hidden]) .item')];
-      const i = visibles.findIndex((x) => x.dataset.id === actual);
-      if (i === visibles.length - 1) {
-        // Al terminar un grupo, pasa al otro grupo
-        const otro = botonesGrupo.find((b) => b.getAttribute('aria-selected') !== 'true');
-        otro?.click();
-      } else elegir(visibles[i + 1].dataset.id!);
-    };
-    const detener = () => { tocado = true; clearInterval(auto); };
-    if (!conMouse.matches && !reducido) {
-      new IntersectionObserver(([e]) => {
-        clearInterval(auto);
-        if (e.isIntersecting && !tocado) auto = window.setInterval(siguiente, 3500);
-      }, { threshold: 0.3 }).observe(raiz.querySelector('.selector')!);
-    }
-
     raiz.querySelectorAll<HTMLElement>('.item').forEach((el) => {
       el.addEventListener('mouseenter', () => { if (conMouse.matches) elegir(el.dataset.id!); });
-      el.addEventListener('click', (ev) => { if (ev.isTrusted) detener(); elegir(el.dataset.id!); });
+      el.addEventListener('click', () => elegir(el.dataset.id!));
       el.addEventListener('focus', () => elegir(el.dataset.id!));
     });
-    botonesGrupo.forEach((b) => b.addEventListener('click', (ev) => { if (ev.isTrusted) detener(); }));
 
     moverPildora();
     addEventListener('resize', moverPildora);

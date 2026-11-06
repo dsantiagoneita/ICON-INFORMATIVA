@@ -1,4 +1,5 @@
 ---
+import Llamado from '../../components/Llamado.astro';
 import Base from '../../layouts/Base.astro';
 import Icono from '../../components/Icono.astro';
 import SelectorServicios from '../../components/SelectorServicios.astro';
@@ -13,7 +14,7 @@ import { enlaceWhatsApp } from '../../data/empresa.js';
       <nav class="miga" aria-label="Ruta"><a href="/">Inicio</a><Icono nombre="chevron-right" />Servicios</nav>
       <span class="etiqueta">Servicios</span>
       <h1>Construcción y mantenimiento de redes eléctricas</h1>
-      <p>Redes de baja y media tensión en Sogamoso y los 13 municipios de Sugamuxi, bajo las normas de la EBSA.</p>
+      <p>Redes de baja y media tensión en 21 municipios de Sugamuxi y sus alrededores, bajo las normas de la EBSA.</p>
     </div>
   </div>
 
@@ -23,10 +24,5 @@ import { enlaceWhatsApp } from '../../data/empresa.js';
     </div>
   </section>
 
-  <div class="llamado">
-    <div class="contenedor">
-      <h2>¿No sabe cuál servicio necesita?</h2>
-      <span class="iman"><a href={enlaceWhatsApp('Hola ICON, necesito asesoría para un trabajo eléctrico.')} target="_blank" rel="noopener" class="boton boton-oscuro"><Icono nombre="brand-whatsapp" /> Pregúntenos</a></span>
-    </div>
-  </div>
+  <Llamado titulo="¿No sabe cuál servicio necesita?" mensaje="Hola ICON, necesito asesoría para un trabajo eléctrico." />
 </Base>

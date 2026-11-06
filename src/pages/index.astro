@@ -1,23 +1,23 @@
 ---
+import SeparadorCable from '../components/SeparadorCable.astro';
+import Llamado from '../components/Llamado.astro';
 import Base from '../layouts/Base.astro';
 import Icono from '../components/Icono.astro';
 import SelectorServicios from '../components/SelectorServicios.astro';
-import ObraIlustracion from '../components/ObraIlustracion.astro';
-import { empresa, municipios, enlaceWhatsApp } from '../data/empresa.js';
+import { empresa, municipios, conexiones, totalMunicipios, enlaceWhatsApp } from '../data/empresa.js';
 import { proyectos } from '../data/proyectos.js';
 
-const lugaresPortada = ['Sogamoso', 'Nobsa', 'Tibasosa', 'Aquitania', 'Iza', 'Firavitoba', 'Monguí', 'Sugamuxi'];
+// Mapa esquemático: líneas de la red entre los lugares (sale de src/data/empresa.js)
+const pos = Object.fromEntries(municipios.map((m) => [m.nombre, m]));
+const lazos = conexiones.map(([a, b]) => `M${pos[a].x} ${pos[a].y} L${pos[b].x} ${pos[b].y}`).join(' ');
 
-// Mapa esquemático: conexiones entre municipios y orden en que se iluminan
-const lazos = 'M230 170 L150 120 M230 170 L240 70 M240 70 L300 40 M230 170 L330 140 M330 140 L380 90 M230 170 L90 180 M230 170 L160 240 M160 240 L110 310 M230 170 L250 250 M250 250 L320 280 M250 250 L250 330 M320 280 L400 330';
-const ordenLuz = '5,3,6,1,4,8,7,0,2,10,11,9,12';
-
-// Galería de obras (sale de src/data/proyectos.js)
+// Galería «Nuestro trabajo» (sale de src/data/proyectos.js)
 const obras = proyectos.slice(0, 6);
 ---
 <Base
-  titulo="ICON Ltda · Redes eléctricas en Sogamoso y Sugamuxi, Boyacá"
-  descripcion="Construcción y mantenimiento de redes eléctricas de baja y media tensión en Sogamoso y los 13 municipios de Sugamuxi, Boyacá. Contratista de la EBSA."
+  titulo="ICON Ltda · Redes eléctricas en Boyacá | Sogamoso, Sugamuxi y Duitama"
+  descripcion="Contratista de la EBSA con oficina en Duitama. Diseñamos, construimos y mantenemos redes eléctricas de baja y media tensión en Sogamoso y Sugamuxi, Boyacá."
+  fichaEmpresa
 >
   <!-- Portada -->
   <section class="portada" id="inicio">
@@ -52,7 +52,7 @@ const obras = proyectos.slice(0, 6);
     <div class="contenedor" style="height:100%">
       <div class="contenido">
         <div class="etiqueta sube" style="animation-delay:.6s">Contratista de la EBSA · Zona Sugamuxi</div>
-        <h1 class="sube" style="animation-delay:.8s">Energía que conecta a <span class="rota" id="rota" data-lugares={lugaresPortada.join(',')}><span>Sogamoso</span></span></h1>
+        <h1 class="sube" style="animation-delay:.8s">Energía que conecta a <span class="rota" id="rota" data-lugares={['Sugamuxi', ...municipios.filter((m) => m.tipo !== 'punto').map((m) => m.nombre)].join(',')}><span class="rota-palabra">Sugamuxi</span></span></h1>
         <div class="botones sube" style="animation-delay:1s">
           <span class="iman"><a href="/contacto" class="boton boton-oscuro">Contáctenos <Icono nombre="arrow-right" /></a></span>
           <span class="iman"><a href={enlaceWhatsApp()} target="_blank" rel="noopener" class="boton boton-borde-carbon"><Icono nombre="brand-whatsapp" /> WhatsApp</a></span>
@@ -67,7 +67,7 @@ const obras = proyectos.slice(0, 6);
     <div class="contenedor">
       {empresa.cifras.map((c, i) => (
         <div class={`cifra rev ${i ? 'd' + i : ''}`}>
-          <b><span class="num" data-fin={c.valor}>0</span>{c.sufijo}</b><span class="t">{c.texto}</span>
+          <b>{c.valor}{c.sufijo}</b><span class="t">{c.texto}</span>
         </div>
       ))}
     </div>
@@ -105,14 +105,17 @@ const obras = proyectos.slice(0, 6);
     </div>
   </section>
 
+  <SeparadorCable />
+
   <!-- Por qué elegirnos -->
   <section class="razones">
     <div class="contenedor">
       <div class="rev"><span class="etiqueta">Por qué elegirnos</span><h2 class="titulo-seccion">Trabajo seguro y a tiempo</h2></div>
-      <div class="fila">
-        <div class="razon rev"><Icono nombre="casco-obra" /><h3>Seguridad primero</h3><p>Personal con equipos de protección y procedimientos de trabajo seguro en cada obra.</p></div>
-        <div class="razon rev d1"><Icono nombre="calendar-check" /><h3>Cumplimiento</h3><p>Entregamos las obras en los tiempos acordados con la EBSA y la comunidad.</p></div>
-        <div class="razon rev d2"><Icono nombre="certificate" /><h3>Personal certificado</h3><p>Técnicos y linieros con experiencia en redes de baja y media tensión.</p></div>
+      <div class="fila cuatro">
+        <div class="razon"><Icono nombre="casco-obra" /><h3>Seguridad primero</h3><p>Personal con equipos de protección y procedimientos de trabajo seguro en cada obra.</p></div>
+        <div class="razon"><Icono nombre="rosette-discount-check" /><h3>Calidad</h3><p>Diseñamos y construimos cumpliendo las normas técnicas de la EBSA.</p></div>
+        <div class="razon"><Icono nombre="calendar-check" /><h3>Cumplimiento</h3><p>Entregamos las obras en los tiempos acordados con la EBSA y la comunidad.</p></div>
+        <div class="razon"><Icono nombre="certificate" /><h3>Personal certificado</h3><p>Técnicos y linieros con experiencia en redes de baja y media tensión.</p></div>
       </div>
     </div>
   </section>
@@ -131,28 +134,36 @@ const obras = proyectos.slice(0, 6);
     </div>
   </section>
 
-  <!-- Zona: mapa de los 13 municipios -->
+  <SeparadorCable />
+
+  <!-- Zona: mapa de los lugares donde trabaja ICON -->
   <section class="zona" id="zona">
     <div class="contenedor">
       <div class="rev">
         <span class="etiqueta">Zona de trabajo</span>
-        <h2 class="titulo-seccion">Presentes en toda Sugamuxi</h2>
+        <h2 class="titulo-seccion">Presentes en {totalMunicipios} municipios</h2>
         <div class="raya"></div>
-        <p>Diseñamos, construimos y mantenemos redes eléctricas en los 13 municipios de la provincia de Sugamuxi, en Boyacá.</p>
-        <ul class="municipios">
-          {municipios.map((m, i) => <li data-i={i}>{m.nombre}</li>)}
+        <p>Diseñamos, construimos y mantenemos redes eléctricas en Sugamuxi y sus alrededores: {totalMunicipios} municipios de Boyacá, además de puntos clave de la red como El Crucero y Vado Hondo.</p>
+        <p class="zona-pista">Pase el cursor por el mapa para ver cada lugar.</p>
+        <ul class="leyenda-mapa">
+          <li><span class="ley-muni"></span> Municipio</li>
+          <li><span class="ley-punto"></span> Punto clave de la red</li>
         </ul>
       </div>
       <div class="rev d2">
-        <div class="mapa">
-          <svg viewBox="0 0 520 420" role="img" aria-label="Esquema de los 13 municipios de Sugamuxi" data-orden={ordenLuz}>
-            <path class="borde" d="M60 60 Q200 10 330 20 Q450 30 470 120 Q500 230 460 360 Q330 410 200 390 Q70 370 50 260 Q30 150 60 60Z" />
+        <div class="mapa" data-zona>
+          <svg viewBox="0 0 620 470" role="img" aria-label={`Esquema de los ${totalMunicipios} municipios y puntos clave donde trabaja ICON: ${municipios.map((m) => m.nombre).join(', ')}`}>
+            <path class="borde" d="M30 20 Q300 -6 590 20 Q614 230 590 450 Q300 474 30 450 Q6 230 30 20Z" />
             <path class="lazo" d={lazos} />
             {municipios.map((m, i) => (
-              <g id={`m${i}`}>
-                <circle class="halo" cx={m.x} cy={m.y} r="9" />
-                <circle class="m" cx={m.x} cy={m.y} r="6" />
-                <text x={m.x + 13} y={m.y + 4} font-weight={m.nombre === 'Sogamoso' ? '600' : undefined}>{m.nombre}</text>
+              <g class={`muni ${m.tipo === 'punto' ? 'punto-clave' : ''}`} data-i={i}>
+                <title>{m.tipo === 'punto' ? `${m.nombre}: ${m.nota}` : m.nombre}</title>
+                <circle class="zona-toque" cx={m.x + 26} cy={m.y} r="22" />
+                <circle class="halo" cx={m.x} cy={m.y} r="15" />
+                {m.tipo === 'punto'
+                  ? <rect class="m" x={m.x - 6} y={m.y - 6} width="12" height="12" transform={`rotate(45 ${m.x} ${m.y})`} />
+                  : <circle class="m" cx={m.x} cy={m.y} r="6" />}
+                <text x={m.x + 19} y={m.y + 4}>{m.nombre}</text>
               </g>
             ))}
           </svg>
@@ -162,32 +173,48 @@ const obras = proyectos.slice(0, 6);
     </div>
   </section>
 
-  <!-- Proyectos -->
+  <!-- Nuestro trabajo -->
   <section class="proyectos">
     <div class="contenedor">
       <div class="cabeza rev">
-        <div><span class="etiqueta">Proyectos</span><h2 class="titulo-seccion">Obras destacadas</h2></div>
-        <div class="flechas">
-          <button id="ant" type="button" aria-label="Obra anterior"><Icono nombre="arrow-left" /></button>
-          <button id="sig" type="button" aria-label="Obra siguiente"><Icono nombre="arrow-right" /></button>
-        </div>
+        <div><span class="etiqueta">Trabajos realizados</span><h2 class="titulo-seccion">Nuestro trabajo</h2></div>
+        <a class="ver-todos" href="/trabajos">Ver todos los trabajos <Icono nombre="arrow-right" /></a>
       </div>
-      <div class="carril rev" id="carril">
-        {obras.map((o) => (
-          <article class="obra">
-            <div class="img"><ObraIlustracion tono={o.tono} /></div>
-            <div class="info"><div class="lugar"><Icono nombre="map-pin" /> {o.municipio}, Boyacá</div><h3>{o.titulo}</h3></div>
-          </article>
-        ))}
+      <div class="galeria">
+        <button class="flecha-lado izq" id="ant" type="button" aria-label="Obra anterior"><Icono nombre="chevron-left" /></button>
+        <div class="carril" id="carril">
+          {obras.map((o) => (
+            <article class="obra">
+              <div class="img"><img src={o.foto} alt={o.alt} loading="lazy" decoding="async" style={`object-position:${o.posicion}`} /></div>
+              <div class="info"><div class="lugar">{o.tipo}</div><h3>{o.titulo}</h3></div>
+            </article>
+          ))}
+        </div>
+        <button class="flecha-lado der" id="sig" type="button" aria-label="Obra siguiente"><Icono nombre="chevron-right" /></button>
       </div>
     </div>
   </section>
 
   <!-- Franja final -->
-  <div class="llamado">
-    <div class="contenedor">
-      <h2>¿Tiene un proyecto eléctrico en Sugamuxi?</h2>
-      <span class="iman"><a href={enlaceWhatsApp('Hola ICON, tengo un proyecto eléctrico y quisiera una cotización.')} target="_blank" rel="noopener" class="boton boton-oscuro">Hablemos <Icono nombre="arrow-right" /></a></span>
-    </div>
-  </div>
+  <Llamado titulo="¿Tiene un proyecto eléctrico en Boyacá?" mensaje="Hola ICON, tengo un proyecto eléctrico y quisiera una cotización." />
 </Base>
+
+<script>
+  // Zona de trabajo: el municipio por el que pasa el cursor (o que se toca en el celular)
+  // se ilumina en el mapa.
+  const zonas = document.querySelectorAll<HTMLElement>('[data-zona]');
+  const mapa = document.querySelector<HTMLElement>('.mapa[data-zona]');
+  const iluminar = (i: string | null) => {
+    document.querySelectorAll<Element>('.mapa .muni').forEach((el) => {
+      el.classList.toggle('luz', i !== null && el.getAttribute('data-i') === i);
+    });
+    mapa?.classList.toggle('con-luz', i !== null);
+  };
+  zonas.forEach((zona) => {
+    zona.querySelectorAll<Element>('[data-i]').forEach((el) => {
+      el.addEventListener('pointerenter', () => iluminar(el.getAttribute('data-i')));
+      el.addEventListener('click', () => iluminar(el.getAttribute('data-i')));
+    });
+    zona.addEventListener('pointerleave', (e) => { if ((e as PointerEvent).pointerType === 'mouse') iluminar(null); });
+  });
+</script>
